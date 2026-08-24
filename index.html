@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <title>SSC CGL English Coach</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 24px;
+      border-radius: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+    }
+
+    .header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 13px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .secondary {
+      background: #e8eefc;
+      color: #1d4ed8;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+    }
+
+    .stat {
+      flex: 1;
+      background: #f1f5ff;
+      padding: 15px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      color: #2563eb;
+    }
+
+    .question {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .option {
+      background: #f3f4f6;
+      color: #172033;
+      text-align: left;
+    }
+
+    .correct {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .wrong {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .explanation {
+      margin-top: 15px;
+      padding: 14px;
+      background: #f8fafc;
+      border-left: 4px solid #2563eb;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .category {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <h1>📘 SSC CGL English Coach</h1>
+    <p>Your personal English practice coach</p>
+  </div>
+
+  <div id="home">
+
+    <div class="card">
+      <h2>Today's Practice</h2>
+      <p>Improve your SSC CGL English step by step.</p>
+
+      <button onclick="startPractice()">
+        Start Practice
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Your Progress</h2>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="questionsAttempted">0</strong>
+          Questions
+        </div>
+
+        <div class="stat">
+          <strong id="correctAnswers">0</strong>
+          Correct
+        </div>
+
+        <div class="stat">
+          <strong id="accuracy">0%</strong>
+          Accuracy
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="quiz" class="hidden">
+
+    <div class="card">
+
+      <div class="category" id="category">
+        Grammar
+      </div>
+
+      <div id="question" class="question"></div>
+
+      <div id="options"></div>
+
+      <div id="explanation" class="explanation hidden"></div>
+
+      <button id="nextButton" class="hidden" onclick="nextQuestion()">
+        Next Question
+      </button>
+
+      <button class="secondary" onclick="goHome()">
+        Exit Practice
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const questions = [
+
+  {
+    category: "Grammar",
+    question: "Choose the correct sentence.",
+    options: [
+      "He do not like tea.",
+      "He does not likes tea.",
+      "He does not like tea.",
+      "He don't likes tea."
+    ],
+    answer: 2,
+    explanation: "With 'does not', the main verb remains in its base form: 'does not like'."
+  },
+
+  {
+    category: "Vocabulary",
+    question: "Choose the synonym of 'Abundant'.",
+    options: [
+      "Scarce",
+      "Plentiful",
+      "Weak",
+      "Empty"
+    ],
+    answer: 1,
+    explanation: "'Abundant' means available in large quantities. Therefore, 'Plentiful' is correct."
+  },
+
+  {
+    category: "Antonyms",
+    question: "Choose the antonym of 'Ancient'.",
+    options: [
+      "Old",
+      "Historic",
+      "Modern",
+      "Traditional"
+    ],
+    answer: 2,
+    explanation: "'Ancient' means very old. Its opposite is 'Modern'."
+  },
+
+  {
+    category: "Error Spotting",
+    question: "Identify the incorrect part: 'She is senior than me.'",
+    options: [
+      "She",
+      "is senior",
+      "than me",
+      "No error"
+    ],
+    answer: 2,
+    explanation: "The correct expression is 'senior to me', not 'senior than me'."
+  },
+
+  {
+    category: "Idioms",
+    question: "What does 'A blessing in disguise' mean?",
+    options: [
+      "A hidden enemy",
+      "Something that seems bad but turns out beneficial",
+      "A religious ceremony",
+      "A difficult situation"
+    ],
+    answer: 1,
+    explanation: "A blessing in disguise is something that initially appears bad but later proves beneficial."
+  }
+
+];
+
+let currentQuestion = 0;
+let attempted = Number(localStorage.getItem("attempted")) || 0;
+let correct = Number(localStorage.getItem("correct")) || 0;
+
+function updateProgress() {
+
+  document.getElementById("questionsAttempted").textContent = attempted;
+  document.getElementById("correctAnswers").textContent = correct;
+
+  const accuracy =
+    attempted === 0
+      ? 0
+      : Math.round((correct / attempted) * 100);
+
+  document.getElementById("accuracy").textContent =
+    accuracy + "%";
+}
+
+function startPractice() {
+
+  currentQuestion = 0;
+
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+
+  showQuestion();
+}
+
+function showQuestion() {
+
+  const q = questions[currentQuestion];
+
+  document.getElementById("category").textContent =
+    q.category;
+
+  document.getElementById("question").textContent =
+    q.question;
+
+  const optionsContainer =
+    document.getElementById("options");
+
+  optionsContainer.innerHTML = "";
+
+  document.getElementById("explanation")
+    .classList.add("hidden");
+
+  document.getElementById("nextButton")
+    .classList.add("hidden");
+
+  q.options.forEach((option, index) => {
+
+    const button = document.createElement("button");
+
+    button.textContent = option;
+    button.className = "option";
+
+    button.onclick = () => checkAnswer(index, button);
+
+    optionsContainer.appendChild(button);
+  });
+}
+
+function checkAnswer(selected, selectedButton) {
+
+  const q = questions[currentQuestion];
+
+  const buttons =
+    document.querySelectorAll("#options button");
+
+  buttons.forEach(button => {
+    button.disabled = true;
+  });
+
+  attempted++;
+
+  if (selected === q.answer) {
+
+    correct++;
+
+    selectedButton.classList.add("correct");
+
+  } else {
+
+    selectedButton.classList.add("wrong");
+
+    buttons[q.answer].classList.add("correct");
+  }
+
+  localStorage.setItem("attempted", attempted);
+  localStorage.setItem("correct", correct);
+
+  document.getElementById("explanation").textContent =
+    q.explanation;
+
+  document.getElementById("explanation")
+    .classList.remove("hidden");
+
+  document.getElementById("nextButton")
+    .classList.remove("hidden");
+
+  updateProgress();
+}
+
+function nextQuestion() {
+
+  currentQuestion++;
+
+  if (currentQuestion >= questions.length) {
+
+    alert(
+      "Practice completed! Great work. 🎯"
+    );
+
+    goHome();
+
+    return;
+  }
+
+  showQuestion();
+}
+
+function goHome() {
+
+  document.getElementById("quiz")
+    .classList.add("hidden");
+
+  document.getElementById("home")
+    .classList.remove("hidden");
+
+  updateProgress();
+}
+
+updateProgress();
+
+</script>
+
+</body>
+</html>
